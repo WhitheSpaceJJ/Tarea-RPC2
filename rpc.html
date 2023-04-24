@@ -99,18 +99,16 @@ function obtenerProductos() {
     .catch(error => console.error(error));
 }
 
-function obtenerProductoPorId(){
+function obtenerProductoPorId() {
   let id = document.getElementById('inputId').value;
-fetch(`http://localhost:8080/EjemploREST/webresources/producto/id?=${id}`)
 
+  fetch(`http://localhost:8080/EjemploREST/webresources/producto/`+id)
     .then(response => response.json())
     .then(data => {
       let table = document.getElementById('productoTable');
       table.innerHTML = '<tr><th>ID</th><th>Nombre</th><th>Descripción</th><th>Marca</th></tr>';
-      data.forEach(producto => {
-        let row = table.insertRow();
-        row.innerHTML = `<td>${producto.id}</td><td>${producto.nombre}</td><td>${producto.descripcion}</td><td>${producto.marca}</td>`;
-      });
+      let row = table.insertRow();
+      row.innerHTML = `<td>${data.id}</td><td>${data.nombre}</td><td>${data.descripcion}</td><td>${data.marca}</td>`;
     })
     .catch(error => console.error(error));
 }

@@ -45,12 +45,12 @@ public class ProductoResource {
     public Response obtenerProductosEspecial(@QueryParam("id") String id, @QueryParam("nombre") String nombre,
             @QueryParam("descripcion") String descripcion, @QueryParam("marca") String marca) {
 
-        Object[] objetos2= new Object[4];
+        Object[] objetos2 = new Object[4];
         objetos2[0] = id != null ? id.replace("\\n", "") : null;
         objetos2[1] = nombre != null ? nombre.replace("\\n", "") : null;
         objetos2[2] = descripcion != null ? descripcion.replace("\\n", "") : null;
         objetos2[3] = marca != null ? marca.replace("\\n", "") : null;
-          try {
+        try {
             Consumidor consumidor = new Consumidor();
             Peticion peticion
                     = consumidor.call(new Peticion(new Random().nextInt(1000),
@@ -70,6 +70,7 @@ public class ProductoResource {
                     jsonArrayBuilder.add(productoJsonBuilder.build());
                 }
                 JsonArray jsonArray = jsonArrayBuilder.build();
+                System.out.println(jsonArray.toString());
                 return Response.ok().entity(jsonArray.toString()).build();
             } else {
                 return Response.status(Response.Status.NOT_FOUND).build();
@@ -78,7 +79,7 @@ public class ProductoResource {
             System.out.println("Error; " + e.getMessage());
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        
+
     }
 
     @GET
@@ -96,6 +97,7 @@ public class ProductoResource {
                 return Response.status(Response.Status.NOT_FOUND).build();
             } else if (peticion.getCuerpo() != null && peticion != null) {
                 Producto productoABuscar = (Producto) peticion.getCuerpo()[0];
+                System.out.println(productoABuscar);
                 return Response.ok().entity(productoABuscar).build();
             } else {
                 return Response.status(Response.Status.NOT_FOUND).build();
@@ -130,6 +132,7 @@ public class ProductoResource {
                     jsonArrayBuilder.add(productoJsonBuilder.build());
                 }
                 JsonArray jsonArray = jsonArrayBuilder.build();
+                System.out.println(jsonArray.toString());
                 return Response.ok().entity(jsonArray.toString()).build();
             } else {
                 return Response.status(Response.Status.NOT_FOUND).build();
@@ -145,7 +148,7 @@ public class ProductoResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response actualizarProducto(@PathParam("id") String id, Producto productoActualizado) {
-         try {
+        try {
             Consumidor consumidor = new Consumidor();
             Object[] objetos = new Object[1];
             objetos[0] = productoActualizado;
@@ -157,6 +160,7 @@ public class ProductoResource {
                 return Response.status(Response.Status.NOT_FOUND).build();
             } else if (peticion.getCuerpo() != null && peticion.getCuerpo().length > 0 && peticion.getCuerpo()[0] instanceof Boolean && (boolean) peticion.getCuerpo()[0] == true && peticion != null) {
                 Producto productoABuscar = (Producto) peticion.getCuerpo()[0];
+                System.out.println(productoABuscar);
                 return Response.ok().entity(productoABuscar).build();
             } else {
                 return Response.status(Response.Status.NOT_FOUND).build();
@@ -174,7 +178,7 @@ public class ProductoResource {
         try {
             Consumidor consumidor = new Consumidor();
             Object[] objetos = new Object[1];
-            objetos[0] =Integer.valueOf(id);
+            objetos[0] = Integer.valueOf(id);
             Peticion peticion
                     = consumidor.call(new Peticion(new Random().nextInt(1000),
                             TipoPeticion.ELIMINAR, Calendar.getInstance().getTime(),
@@ -183,6 +187,7 @@ public class ProductoResource {
                 return Response.status(Response.Status.NOT_FOUND).build();
             } else if (peticion.getCuerpo() != null && peticion.getCuerpo().length > 0 && peticion.getCuerpo()[0] instanceof Boolean && (boolean) peticion.getCuerpo()[0] == true && peticion != null) {
                 Producto productoABuscar = (Producto) peticion.getCuerpo()[0];
+                System.out.println(productoABuscar);
                 return Response.ok().entity(productoABuscar).build();
             } else {
                 return Response.status(Response.Status.NOT_FOUND).build();
@@ -209,6 +214,7 @@ public class ProductoResource {
                 return Response.status(Response.Status.NOT_FOUND).build();
             } else if (peticion.getCuerpo() != null && peticion.getCuerpo().length > 0 && peticion.getCuerpo()[0] instanceof Boolean && (boolean) peticion.getCuerpo()[0] == true && peticion != null) {
                 Producto productoABuscar = (Producto) peticion.getCuerpo()[0];
+                System.out.println(productoABuscar);
                 return Response.ok().entity(productoABuscar).build();
             } else {
                 return Response.status(Response.Status.NOT_FOUND).build();
