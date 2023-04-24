@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prueba de Servidor REST</title>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Prueba de Servidor REST</h1>
+
+  <div>
+  <h2>Obtener Todos los Productos</h2>
+  <button onclick="obtenerProductos()">Obtener Productos</button>
+  <div id="resultadoProductos"></div>
+</div>
+
+<table id="productosTable">
+  <tr>
+    <th>ID</th>
+    <th>Nombre</th>
+    <th>Descripción</th>
+    <th>Marca</th>
+  </tr>
+</table>
+
+<div>
+  <h2>Obtener Producto por ID</h2>
+  <label for="inputId">ID:</label>
+  <input type="text" id="inputId">
+  <button onclick="obtenerProductoPorId()">Obtener Producto</button>
+  <table id="productoTable">
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Descripción</th>
+      <th>Marca</th>
+    </tr>
+  </table>
+</div>
+<div>
+    <h2>Obtener Productos Especial</h2>
+    <label for="inputIdEspecial">ID:</label>
+    <input type="text" id="inputIdEspecial">
+    <label for="inputNombreEspecial">Nombre:</label>
+    <input type="text" id="inputNombreEspecial">
+    <label for="inputDescripcionEspecial">Descripcion:</label>
+    <input type="text" id="inputDescripcionEspecial">
+    <label for="inputMarcaEspecial">Marca:</label>
+    <input type="text" id="inputMarcaEspecial">
+    <button onclick="obtenerProductosEspecial()">Obtener Productos Especial</button>
+    <div id="resultadoProductosEspecial"></div>
+</div>
+
+<div>
+    <h2>Agregar un Producto</h2>
+    <label for="nombreInput">Nombre:</label>
+    <input type="text" id="nombreInput">
+    <label for="descripcionInput">Descripcion:</label>
+    <input type="text" id="descripcionInput">
+    <label for="marcaInput">Marca:</label>
+    <input type="text" id="marcaInput">
+    <button onclick="agregarProducto()">Agregar Producto</button>
+    <div id="resultadoAgregar"></div>
+</div>
+
+<div>
+    <h2>Actualizar un Producto</h2>
+    <label for="idActualizarInput">ID:</label>
+    <input type="text" id="idActualizarInput">
+    <label for="nombreActualizarInput">Nombre:</label>
+    <input type="text" id="nombreActualizarInput">
+    <label for="descripcionActualizarInput">Descripcion:</label>
+    <input type="text" id="descripcionActualizarInput">
+    <label for="marcaActualizarInput">Marca:</label>
+    <input type="text" id="marcaActualizarInput">
+    <button onclick="actualizarProducto()">Actualizar Producto</button>
+    <div id="resultadoActualizar"></div>
+</div>
+
+<div>
+    <h2>Eliminar un Producto</h2>
+    <label for="idEliminarInput">ID:</label>
+    <input type="text" id="idEliminarInput">
+    <button onclick="eliminarProducto()">Eliminar Producto</button>
+    <div id="resultadoEliminar"></div>
+</div>
+    <script>
+function obtenerProductos() {
+  fetch('http://localhost:8080/EjemploREST/webresources/producto')
+    .then(response => response.json())
+    .then(data => {
+      let table = document.getElementById('productosTable');
+      table.innerHTML = '<tr><th>ID</th><th>Nombre</th><th>Descripción</th><th>Marca</th></tr>';
+      data.forEach(producto => {
+        let row = table.insertRow();
+        row.innerHTML = `<td>${producto.id}</td><td>${producto.nombre}</td><td>${producto.descripcion}</td><td>${producto.marca}</td>`;
+      });
+    })
+    .catch(error => console.error(error));
+}
+
+function obtenerProductoPorId(){
+  let id = document.getElementById('inputId').value;
+fetch(`http://localhost:8080/EjemploREST/webresources/producto/id?=${id}`)
+
+    .then(response => response.json())
+    .then(data => {
+      let table = document.getElementById('productoTable');
+      table.innerHTML = '<tr><th>ID</th><th>Nombre</th><th>Descripción</th><th>Marca</th></tr>';
+      data.forEach(producto => {
+        let row = table.insertRow();
+        row.innerHTML = `<td>${producto.id}</td><td>${producto.nombre}</td><td>${producto.descripcion}</td><td>${producto.marca}</td>`;
+      });
+    })
+    .catch(error => console.error(error));
+}
+
+function agregarProducto() {
+  let nombre = document.getElementById('nombreInput').value;
+  let descripcion = document.getElementById('descripcionInput').value;
+  let marca = document.getElementById('marcaInput').value;
+  let producto = {nombre, descripcion, marca};
+  fetch('http://localhost:8080/EjemploREST/webresources/producto', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(producto)
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      obtenerProductos();
+    })
+    .catch(error => console.error(error));
+}
+
+function actualizarProducto() {
+  let id = document.getElementById('idActualizarInput').value;
+  let nombre = document.getElementById('nombreActualizarInput').value;
+  let descripcion = document.getElementById('descripcionActualizarInput').value;
+  let marca = document.getElementById('marcaActualizarInput').value;
+  let producto = {nombre, descripcion, marca};
+  fetch(`http://localhost:8080/EjemploREST/webresources/producto/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(producto)
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      obtenerProductos();
+    })
+    .catch(error => console.error(error));
+}
+
+function eliminarProducto() {
+  let id = document.getElementById('idEliminarInput').value;
+  fetch(`http://localhost:8080/EjemploREST/webresources/producto/id?=${id}`, {
+      method: 'DELETE'
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      obtenerProductos();
+    })
+    .catch(error => console.error(error));
+}
+function obtenerProductosEspecial() {
+    var id = document.getElementById("inputIdEspecial").value;
+    var nombre = document.getElementById("inputNombreEspecial").value;
+    var descripcion = document.getElementById("inputDescripcionEspecial").value;
+    var marca = document.getElementById("inputMarcaEspecial").value;
+
+    var url = "http://localhost:8080/EjemploREST/webresources/producto/query";
+    if (id) {
+        url += "?id=" + id;
+    }
+    if (nombre) {
+        url += "&nombre=" + nombre;
+    }
+    if (descripcion) {
+        url += "&descripcion=" + descripcion;
+    }
+    if (marca) {
+        url += "&marca=" + marca;
+    }
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            var resultadoDiv = document.getElementById("resultadoProductosEspecial");
+            resultadoDiv.innerHTML = "";
+            if (data.length > 0) {
+                for (var i = 0; i < data.length; i++) {
+                    var producto = data[i];
+                    var productoDiv = document.createElement("div");
+                    productoDiv.innerHTML = "ID: " + producto.id + "<br>" +
+                        "Nombre: " + producto.nombre + "<br>" +
+                        "Descripción: " + producto.descripcion + "<br>" +
+                        "Marca: " + producto.marca;
+                    resultadoDiv.appendChild(productoDiv);
+                }
+            } else {
+                resultadoDiv.innerHTML = "No se encontraron productos que cumplan con los criterios de búsqueda.";
+            }
+        })
+        .catch(error => {
+            var resultadoDiv = document.getElementById("resultadoProductosEspecial");
+            resultadoDiv.innerHTML = "Ocurrió un error al obtener los productos: " + error;
+        });
+}
+
+    </script>
+</body>
